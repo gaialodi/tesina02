@@ -114,7 +114,7 @@ try{
   //STUDENTI per anno
   public Integer getStudenti(String AS){
 		 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-		 Query q = new Query("stud");
+		 Query q = new Query("eventi");
 		 List<Filter> filters = new ArrayList<Filter>();
 		 q.setFilter(new FilterPredicate("AS",FilterOperator.EQUAL,AS));
 		 PreparedQuery pq = ds.prepare(q);
@@ -147,7 +147,20 @@ try{
 	 return "[" + Integer.toString(ore_totali) + "]";
 }
  
- //EVENTI per anno
+ public Integer getEventi(String AS)
+ {
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 List<Filter> filters = new ArrayList<Filter>();
+	 q.setFilter(new FilterPredicate("AS",FilterOperator.EQUAL,AS));
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 Integer eventi_totali = 0;
+	 for(Entity e : list) {
+		 eventi_totali++;
+	 					  }
+	 return eventi_totali;
+ }
  
  
  
