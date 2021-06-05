@@ -2,7 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="Tiw2021.Tesina00.HelloAppEngine" %>
 <%@ page import ="java.util.*" %>
-<%@ page import= "com.google.appengine.api.users.*" %>
+<%@ page import= "com.google.appengine.api.users.*"%>
+<%@ page import= "com.google.appengine.api.datastore.Entity" %>
 <%@ page import="Tiw2021.Tesina00.*" %>
 <%@ page import="Tiw2021.Tesina00.login" %>
 <%@ page import="Tiw2021.Tesina00.DATI" %>
@@ -60,6 +61,7 @@ img{
 
 .container-fluid, container{
 padding-top: 60px;
+font-size:16px;
 }
 
 body{
@@ -262,17 +264,42 @@ magrin-left:200px;
 margin-right:200px;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+form{
+font-size: 16px;
+
+}
+
 </style>
 
 <%
+//Prendo il numero di studenti per anno
 Integer stud18= d.getStudenti("2018/2019");  
 Integer stud19= d.getStudenti("2019/2020");
 Integer stud20= d.getStudenti("2020/2021");
+//prendo il numero di eventi per anno
+Integer ev18= d.getEventi("2018/2019");  
+Integer ev19= d.getEventi("2019/2020");
+Integer ev20= d.getEventi("2020/2021");
+//prendo il numero di ore per anno
+Integer ore18= Integer.valueOf(d.getOre("2018/2019"));  
+Integer ore19= Integer.valueOf(d.getOre("2019/2020"));
+Integer ore20= Integer.valueOf(d.getOre("2020/2021"));
 %>
 <script type="text/javascript">
+
+//GRAFICI
 google.charts.setOnLoadCallback(drawVisualization);
 function drawVisualization() {
- //GRAFICI
  //Grafico 1
      var data = new google.visualization.DataTable();
         data.addColumn('string','Anni');
@@ -281,12 +308,6 @@ function drawVisualization() {
         data.addRow(["2018/2019", <%=stud18%>])
         data.addRow(["2019/2020", <%=stud19%>])
         data.addRow(["2020/2021", <%=stud20%>])
-        
-		//for(let anno=0; anno < anni.length; anno++) {
-			//data.addRow([anni[anno], studenti[anno]])
-			//}	
-			// 2018/2019, 240
-			// 2019/2020, 553
 			
         var options = {
           title : 'Numero Studenti',
@@ -301,14 +322,18 @@ function drawVisualization() {
         var chart1 = new google.visualization.PieChart(document.getElementById('chart1_div'));
         chart1.draw(data, options);
 	
-   /* //Grafico 2
+   //Grafico 2
      var data2 = new google.visualization.DataTable();
         data2.addColumn('string','Anni');
 		data2.addColumn('number', 'Ore Svolte');
 		
-		for(let anno=0; anno < anni.length; anno++) {
-			data2.addRow([anni[anno], ore[anno]])
-			}	
+		data2.addRow(["2018/2019", <%=ore18%>])
+        data2.addRow(["2019/2020", <%=ore19%>])
+        data2.addRow(["2020/2021", <%=ore20%>])
+		
+		//for(let anno=0; anno < anni.length; anno++) {
+			//data2.addRow([anni[anno], ore[anno]])
+			//}	
 			// 2018/2019, 21
 			// 2019/2020, 22
 			
@@ -329,9 +354,13 @@ function drawVisualization() {
         data3.addColumn('string','Anni');
 		data3.addColumn('number', 'Eventi totali');
 		
-		for(let anno=0; anno < anni.length; anno++) {
-			data3.addRow([anni[anno], eventiTot[anno]])
-			}	
+		data3.addRow(["2018/2019", <%=ev18%>])
+        data3.addRow(["2019/2020", <%=ev19%>])
+        data3.addRow(["2020/2021", <%=ev20%>])
+		
+		//for(let anno=0; anno < anni.length; anno++) {
+			//data3.addRow([anni[anno], eventiTot[anno]])
+			//}	
 			// 2018/2019, 1
 			// 2019/2020, 4
 			
@@ -346,184 +375,236 @@ function drawVisualization() {
         }
         
         var chart3 = new google.visualization.PieChart(document.getElementById('chart3_div'));
-        chart3.draw(data3, options3);*/
+        chart3.draw(data3, options3);
 }
 
-	//MAPPA
-	var lat=44.7007475271964;
-	var long=10.633781921287271;
-	
-	function mappa(){
-		var map = new L.map('map').setView([44.7007, 10.6337], 11);
-
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-		    maxZoom: 17,
-		}).addTo(map);
-		
-		L.marker([lat, long]).addTo(map)
-		    .bindPopup('<b>Istituto ScaruffiLeviTricolore</b><br>Tutti i tuoi eventi sono qui')
-		    .openPopup();
-		
-	}
-
 </script>
-
 </head>
 
 <body>
+
 	<%
 	String user=(String)session.getAttribute("username");
 	String usDB=(String)session.getAttribute("usDB");
 	String pwDB=(String)session.getAttribute("pwDB");
 	boolean adminDB=(boolean)session.getAttribute("admDB");
-	String ore= d.getOre("2018/2019");%>
+	Integer boh = d.getTutto("AS", "2018/2019");%>
 	
 	<div id="main">
-	<nav class="navbar navbar-inverse navbar-default">
-  	<div class="container">
-   	 <div class="navbar-header ">
-   	 </div>
-   	 <ul class="nav navbar-nav navbar-left text-gray">
-   	   <li><a href="">Home</a></li>
- 	 </ul>
-    	 <ul class="nav navbar-nav navbar-right text-gray">
-      		<li><a href="#Dati">DATI</a></li>
-      		<li><a href="#Grafici">GRAFICI</a></li>
-    		<li><a href="#Eventi">EVENTI</a></li>
-      		<li><a href="#Map">MAPPA</a></li>
-    	</ul>
+		<nav class="navbar navbar-inverse navbar-default">
+	  	<div class="container">
+	   	 <div class="navbar-header">
+	   	 </div>
+	   	 <ul class="nav navbar-nav navbar-left text-gray">
+	   	   <li><a href="">Home</a></li>
+	 	 </ul>
+	    	 <ul class="nav navbar-nav navbar-right text-gray">
+	      		<li><a href="#Dati">DATI</a></li>
+	      		<li><a href="#Grafici">GRAFICI</a></li>
+	    		<li><a href="#Eventi">EVENTI</a></li>
+	      		<li><a href="#Map">MAPPA</a></li>
+	      		<li><a href="#Scuole">SCUOLE</a></li>
+	    	</ul>
+	    </div>
+	    </nav>
   	</div>
-	</nav>
+	
 	
 	<div class="container-fluid text-center" style="background-color:White;">
-	<p> <font size="10"><font face="Arial"> <h3> Benvenuto <%=user%> nel sito sugli eventi delle scuole della provincia di Reggio Emilia! </h3> </font> </FONT> </p>
-	<img src="stemmareggio.jpeg"  width="200" height="200">
-		<p>Qui puoi inserire o consultare dati sugli eventi tenutisi nella provincia di Reggio Emilia</p>
-		<%if(adminDB==true){ %>
-		<p>Per aggiungere un utente vai in fondo alla pagina</p>
-		<%}%>
+		<p> <font size="10"><font face="Arial">Sei nel sito Prefettura e Adolescenza! eventi delle scuole della provincia di Reggio Emilia!</font> </FONT> </p>
+		<p> <font size="7"><font face="Arial">Qui puoi consultare gli eventi delle scuole della provincia di Reggio Emilia su temi critici quali droghe, alcol e bullismo</font> </FONT> </p>
+		<img src="stemmareggio.jpeg"  width="200" height="200">
+			<p>Qui puoi inserire o consultare dati sugli eventi tenutisi nella provincia di Reggio Emilia</p>
+			<%if(adminDB==true){ %>
+			<p>Per aggiungere un utente vai in fondo alla pagina</p>
+			<%}%>
+		
+		<h6>Stringa che esce dalla query: name:<%=usDB%> pw:<%=pwDB%> admin:<%=adminDB%></h6>
+		<h6>query getTutto: <%=boh%></h6>
+	</div>
+
+	<!-- DATI / CONTATORI -->
+	<article id="Dati">
+		<div class="container-fluid text-center" >
+			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-file"></span>  DATI RACCOLTI</font></font></font></p>
+			<!-- CONTATORE -->
+				<div class="counter_wrapper">
+					<div class="counter col_4 filetto_verticale_top">
+						<p class="count-text" id="count_text_4">EVENTI<br>SVOLTI</p>
+						<h2 class="timer count-number" id="num_4"><span id="contatore_eventi" ></span></h2>
+					</div>
+					<div class="counter col_2 filetto_verticale_top">
+						<p class="count-text" id="count_text_2">STUDENTI<br>PARTECIPANTI<br></p>
+						<h2 class="timer count-number" id="num_2"><span id="numero_studenti" ></span></h2>
+					</div>
+					<div class="counter col_3 filetto_verticale_top">
+						<p class="count-text" id="count_text_3">SCUOLA<br>VIRTUOSA<br></p>
+						<h2 class="timer count-number" id="num_3"><span id="scuola" ></span></h2>
+					</div>
+					<div class="counter col_1 filetto_verticale_top">
+						<p class="count-text" id="count_text_1">TEMA<br>PRINCIPALE</p>
+						<h2 class="timer count-number" id="num_1"><span id="tema_trattato" ></span></h2>
+					</div>
+					<div class="counter col_6_top filetto_verticale_top">
+						<p class="count-text" id="count_text_6_top">ORE<br>SVOLTE</p>
+						<h2 class="timer count-number" id="num_6_top"><span id="ore" ></span></h2>
+					</div>
+				</div>
+				<!-- FINE CONTATORE -->
+			<br>
+		</div>
+		<br>
+	</article>
 	
-	<h6>Stringa che esce dalla query: name:<%=usDB%> pw:<%=pwDB%> admin:<%=adminDB%></h6>
-	<h6>username inserito:<%=user%>
-	ORE AS 2018/2019:<%=ore%><%=stud18 %></h6>
-	</div>
-
-<article id="Dati">
-
-<div class="container-fluid text-center" >
-<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-file"></span>  DATI RACCOLTI</font></font></font></p>
-<FONT COLOR="  #000080">
-
-<!-- CONTATORE -->
-	<div class="counter_wrapper">
-		<div class="counter col_4 filetto_verticale_top">
-			<p class="count-text" id="count_text_4">EVENTI<br>SVOLTI
-			</p>
-			<h2 class="timer count-number" id="num_4"><span id="contatore_eventi" ></span></h2>
-			
+	
+	<article id="Grafici">
+		<div class="container-fluid text-center" style="background-color:White;">
+			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-stats"></span>   CHARTS</font></font></font></p>
+			<div class="row">
+				<div id="tbn" class="col-sm-4 text-center">	 	
+					<div id="chart1_div" style="width: 100%; height: 60%; "></div>
+				</div>
+				<div id="tbn" class="col-sm-4 text-center">	 	
+					<div id="chart2_div" style="width: 100%; height: 60%; "></div>
+				</div>
+				<div id="tbn" class="col-sm-4 text-center">	 	
+					<div id="chart3_div" style="width: 100%; height: 60%; "></div>
+				</div>
+			</div>
 		</div>
-
-		<div class="counter col_2 filetto_verticale_top">
-			<p class="count-text" id="count_text_2">STUDENTI<br>PARTECIPANTI<br></p>
-			<h2 class="timer count-number" id="num_2"><span id="numero_studenti" ></span></h2>
-			</p>
+	</article>
+	
+	<!-- VISUALIZZA TUTTI GLI EVENTI -->
+	<article id="Eventi">
+		<div class="container-fluid text-center" style=" height: 200px;">
+			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder-open"></span>   EVENTI</font></font></font></p>
+			<table>
+			<tr><td>Evento 1 </td><td> Scuola </td><td> tema</td></tr>
+			<tr><td>Evento 2 </td><td> Scuola </td><td> </td></tr>
+			<tr><td>Evento 3 </td><td> </td><td> </td></tr>
+			</table>
 		</div>
-
-		<div class="counter col_3 filetto_verticale_top">
-			<p class="count-text" id="count_text_3">SCUOLA<br>VIRTUOSA<br></p>
-			<h2 class="timer count-number" id="num_3"><span id="scuola" ></span></h2>
+	</article>
+	
+	<!-- MAPPA  -->
+	<article id="Map">
+		<div class="container-fluid text-center" style="background-color:MistyRose;">
+		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-map-marker"></span> MAPPA</font></font></font></p>
+			<div id="mapId" style="position: relative; top: 0; left: 70; right:70; width: 90%; height: 70%;"></div>
+			<script>
+				//MAPPA
+				var lat=44.7007475271964;
+				var longi=10.633781921287271;
+		
+				var map = new L.map("mapId").setView([44.7007, 10.6337], 11);
+	
+				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			   	 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+			    	maxZoom: 17,
+				}).addTo(map);
+				
+				
+				L.marker([lat, longi]).addTo(map)
+			    	.bindPopup('<b>Istituto ScaruffiLeviTricolore</b><br>Tutti i tuoi eventi sono qui')
+			    	.openPopup();
+				
+			</script>
 		</div>
+		
+	</article>
+	
+	<!-- VISUALIZZA TUTTE LE SCUOLE -->
+	<article id="Scuole">
+		<div class="container-fluid text-center">
+		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span>Scuole</font></font></font></p>
+		<table>
+			<tr><td>Scuola 1</td></tr>
+			<tr><td>Scuola 2</td></tr>
 
-		<div class="counter col_1 filetto_verticale_top">
-			<p class="count-text" id="count_text_1">TEMA<br>PRINCIPALE
-			</p>
-			<h2 class="timer count-number" id="num_1"><span id="tema_trattato" ></span></h2>
+		</table>
+		<!-- Tutto possono visualizzare le scuole ma solo l'amministratore può modificare -->
 		</div>
-
-		<div class="counter col_6_top filetto_verticale_top">
-			<p class="count-text" id="count_text_6_top">ORE<br>SVOLTE</p>
-			<h2 class="timer count-number" id="num_6_top"><span id="ore" ></span></h2>
-		</div>
-	</div>
-	<!-- FINE A CONTATORE -->
-
-<br>
-</div>
-<br>
-</article>
-
-
-<article id="Grafici">
-
-<div class="container-fluid text-center" >
-<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><h3><span class="glyphicon glyphicon-stats"></span>   CHARTS</h3></font></font></font></p>
-<div class="row">
-	<div id="tbn" class="col-sm-4 text-center">	 	
-		<div id="chart1_div" style="width: 100%; height: 60%; "></div>
-	</div>
-	<div id="tbn" class="col-sm-4 text-center">	 	
-		<div id="chart2_div" style="width: 100%; height: 60%; "></div>
-	</div>
-	<div id="tbn" class="col-sm-4 text-center">	 	
-		<div id="chart3_div" style="width: 100%; height: 60%; "></div>
-	</div>
-</div>
-</article>
-
-</div>
-
-<article id="Eventi">
-
+	</article>
+	
+	<!-- CERCA EVENTO -->
+	<article id="CercaEvento">
 	<div class="container-fluid text-center" style=" height: 200px;">
-		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><h3><span class="glyphicon glyphicon-folder-open"></span>   EVENTI </h3></font></font></font></p>
-		<span>Aggiungi un file con degli eventi: <input id="picker" type="file"></span>
-		<script src="LETTURA_CODICE.js"></script>
-	</div>
-</article>
-
-
-<article id="Map">
-
-	<div class="container-fluid text-center" style="background-color:MistyRose;">
-	<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><h3><span class="glyphicon glyphicon-map-marker"></span> MAPPA</h3></font></font></font></p>
-
-		<button onclick="mappa()">Visualizza la mappa</button>
-		<div id="map" style="position: relative; top: 0; left: 70; right:70; width: 90%; height: 70%;">
-		
-		</div>
-		
-		<!-- c'è il modo di visualizzare la mappa direttamente senza fare click? come si mette id? -->
-	</div>
+	<p><FONT COLOR="#000080"><font size="4"><font face="Arial"><span class="glyphicon glyphicon-tags"></span> Cerca per parole chiave</font></font></FONT></p>
 	
-</article>
-
-
-<article id="CercaEvento">
-<div class="container-fluid text-center" style=" height: 200px;">
-<p><FONT COLOR="#000080"><font size="4"><font face="Arial"><span class="glyphicon glyphicon-tags"></span> Cerca per parole chiave</font></font></FONT></p>
-
-</div>
-</article>
-
-<!-- VISIBILE SOLO AGLI AMMINISTRATORI -->
-<%if(adminDB==true){ %>
-<article id="Aggiungi utente">
-<div class="container-fluid text-center" style=" height: 200px;">
-
-<p><font size="4"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span> Aggiungi utente</font></font></font></p>
-Inserisci i dati dell'utente che vuoi aggiunere
-<!-- lo mando alla servlet login.java -->
-<form method="post" id="newUser" action="/helloTesina01">
-<label for="username" style="width:80px"><b>Username</b></label>
-<input type="text" id="User" placeholder="Enter Username" name="username" required><br/>
-<label for="psw" style="width:80px;"><b> Password </b></label>
-<input type="password" id="Password" placeholder="Enter Password" name="password" required><br/>
-<button type="submit">Aggiungi</button>
-</form>
-</div>
-</article>
-<%}%>
+	</div>
+	</article>
+	
+	<!-- VISIBILE SOLO AGLI AMMINISTRATORI -->
+	<%if(adminDB==true){ %>
+	
+	<!-- AGGIUNGI SCUOLE -->
+	<article id="Aggiungi scuole">
+		<div class="container-fluid text-center" style="height:300px;">
+			<p><font size="4"> <FONT COLOR=" #000080"><font face="Arial">Aggiungi scuola</font></font></font></p>
+			Inserisci la scuola che vuoi aggiunere
+			<!-- lo mando alla servlet login.java -->
+			<form method="post" id="newScuola" action="/helloTesina01">
+				<table>
+					<tr>
+						<td><label for="scuola"><b>Scuola</b></label></td>
+						<td><input type="text" id="Scuola" placeholder="Inserire il nome della scuola" name="scuola" required><br/></td>
+					</tr>
+					<tr>
+						<td><label for="lat"><b>Latitudine  </b></label></td>
+						<td><input type="number" id="lat" step="0.0000000001" min="0" max="100" placeholder="Inserisci la latitudine" name="lat" required><br/></td>
+					</tr>
+					<tr>
+						<td><label for="longi"><b>Longitudine  </b></label></td>
+						<td><input type="number" id="longi" step="0.0000000001" min="0" max="100" placeholder="Inserisci la longitudine" name="longi" required><br/></td>
+					</tr>
+					<tr><td></td><td><button type="submit" name="addScuola" value="addScuola">Aggiungi</button></td></tr>
+				</table>
+			</form>
+		</div>
+	</article>
+	
+	<!-- AGGIUNGI EVENTI (FILE) -->
+	<article>
+		<div class="container-fluid text-center" style=" height: 300px;">
+			<p><font size="4"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span> Aggiungi eventi</font></font></font></p>
+			<!-- COLLEGARE MENU DROPDOWN CON SCUOLE  -->
+			Aggiungi un file .csv con degli eventi:
+			
+								<form method="post" id="addFile" action="/helloTesina01">
+								<label for="scuola" placeholder="Scegli la scuola"></label>
+								<input list="scuole">
+								<datalist id="scuole">
+								<!-- qui ci va la lista delle scuole 
+								< %for(int i=0; i< d.getScuole().size() ; i++){%>
+									<option value="< %=//d.getScuole().get(i) %>internet explorer">
+								< %}%>-->
+								<!--  <option value="Internet Explorer">-->
+								</datalist>
+								
+								<label for="file"></label>
+								<!--<span>--><input id="picker" type="file"><!-- </span>-->
+								<script src="LETTURA_CODICE.js"></script>
+								</form>										
+									
+		</div>
+	</article>
+	
+	<!-- AGGIUNGI UTENTE -->
+	<article id="Aggiungi utente">
+		<div class="container-fluid text-center" style=" height: 200px;">
+			<p><font size="4"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span> Aggiungi utente</font></font></font></p>
+			Inserisci i dati dell'utente che vuoi aggiunere <br>
+			<!-- lo mando alla servlet login.java -->
+			<form method="post" id="newUser" action="/helloTesina01">
+				<label for="username" style="width:80px"><b>Username</b></label>
+				<input type="text" id="User" placeholder="Enter Username" name="username" required><br/>
+				<label for="psw" style="width:80px;"><b> Password </b></label>
+				<input type="password" id="Password" placeholder="Enter Password" name="password" required><br/>
+				<button type="submit" name="addUser" value="addUser">Aggiungi</button>
+			</form>
+		</div>
+	</article>
+	<%}%>
 
 </body>
 </html>
