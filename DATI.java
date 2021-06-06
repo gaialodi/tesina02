@@ -1,10 +1,17 @@
 package Tiw2021.Tesina00;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -18,18 +25,32 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-public class DATI
-{
+@WebServlet(name = "dati", value = {"/helloTesina02"}) 
+public class DATI extends HttpServlet{
+	
   private UserService us;
   private DatastoreService ds;
-
-  public DATI(){
-    us=UserServiceFactory.getUserService();
-    ds=DatastoreServiceFactory.getDatastoreService();
+  
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+	      throws IOException {
+	  //importazione del file dalla form di inserimento
+	  String row;
+	  BufferedReader csvReader = new BufferedReader(new FileReader(request.getParameter("picker")));
+	  while ((row = csvReader.readLine()) != null) {
+	      String[] data = row.split(",");
+	      // do something with the data
+	  }
+	  csvReader.close();
+	  
+	  //leggere file
+	  
+	  
   }
   
   public void load(){
 	  try{
+		  us=UserServiceFactory.getUserService();
+		  ds=DatastoreServiceFactory.getDatastoreService();
 		  ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		  InputStream is = classloader.getResourceAsStream("PROVA2.txt");
 		  BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -147,14 +168,48 @@ public class DATI
  }
  
  //PRENDERE TUTTE LE SCUOLE:
- public List getScuole(){
+ public ArrayList getScuole(){
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 	 String s ="";
 	 Query q = new Query("scuole");
 	 List<Filter> filters = new ArrayList<Filter>();
 	 PreparedQuery pq = ds.prepare(q);
 	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
-	 return list;
+	 ArrayList<String> scuole = new ArrayList<String>();
+	 for(Entity e : list) {
+				 scuole.add(e.getProperty("scuola").toString());
+	 }
+	 return scuole;
+ }
+ 
+ //PRENDERE TUTTE LE LATITUDINI:
+ public ArrayList getLat(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 String s ="";
+	 Query q = new Query("scuole");
+	 List<Filter> filters = new ArrayList<Filter>();
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 ArrayList<String> latitudini = new ArrayList<String>();
+	 for(Entity e : list) {
+				 latitudini.add(e.getProperty("latitudine").toString());
+	 }
+	 return latitudini;
+ }
+ 
+ //PRENDERE TUTTE LE SCUOLE:
+ public ArrayList getLongi(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 String s ="";
+	 Query q = new Query("scuole");
+	 List<Filter> filters = new ArrayList<Filter>();
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 ArrayList<String> latitudini = new ArrayList<String>();
+	 for(Entity e : list) {
+				 latitudini.add(e.getProperty("longitudine").toString());
+	 }
+	 return latitudini;
  }
  
  }
