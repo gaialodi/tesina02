@@ -57,16 +57,22 @@ public class DATI extends HttpServlet{
   public void doPost(HttpServletRequest request, HttpServletResponse response)
 	      throws IOException {
 	  //importazione del file dalla form di inserimento
-	  try{
+	  System.out.println("BELLA LIIIII2222");
+	  //leggere file
+	 try{
 		  us=UserServiceFactory.getUserService();
 		  ds=DatastoreServiceFactory.getDatastoreService();
+
+		  InputStream filecontent = null;
 		  
-		  BufferedReader br = new BufferedReader(new FileReader(request.getParameter("picker")));
+		  Part filePart = request.getPart("picker");
+		    filecontent = filePart.getInputStream();
+		    response.getWriter().print("The file uploaded sucessfully.");
+		    BufferedReader br = new BufferedReader(new InputStreamReader(filecontent, "UTF-8"));
+  
 		  String line;
-		  //br.readLine(); //salta un RIGA nel file
-		 System.out.println("BELLA LIIIII2222");
-		 i++;
-		  
+		  br.readLine(); //salta un RIGA nel file		 
+
 		  while((line=br.readLine())!=null){
 			  String[] e=line.split(";");
 			  String AS=e[0].trim();
@@ -75,13 +81,13 @@ public class DATI extends HttpServlet{
 			  String Indirizzo=e[3].trim();
 			  String Grado=e[4].trim();
 			  String Titolo_Progetto=e[5].trim();
-			  String Periodo=e[6]+"a"+e[7].trim();
+			  String Periodo=e[6]+" a "+e[7].trim();
 			  String Formatore=e[8].trim();
 			  String numero_ore=e[9].trim();
 			  String numero_studenti_coinvolti=e[10].trim();
-			  String età_partecipanti=e[11]+"a"+e[12].trim();
+			  String età_partecipanti=e[11]+" a "+e[12].trim();
 			  String Parola_chiave=e[13].trim();
-	     	   
+
 			   Entity x=new Entity("eventi",i);
 			   x.setProperty("AS",AS);
 			   x.setProperty("Scuola",Scuola);
@@ -97,18 +103,21 @@ public class DATI extends HttpServlet{
 			   x.setProperty("Parola_chiave",Parola_chiave);
 			   x.setProperty("CODE",i);
 			   i++;
-			   ds.put(x);			   
-	   
+			   ds.put(x);	
+			   System.out.println("BELLA LIIIII "+i);
+
    }
-		  
+
    br.close();
+   response.sendRedirect("master.jsp");
    
  }catch(Exception e){
 	 e.printStackTrace();
- }
+ } 
 	  
-	  
-  }
+  }//fine POST
+  
+  //carica sul datastore il file che ho già
   
   public void load(){
 	  try{
