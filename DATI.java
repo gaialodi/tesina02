@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -23,13 +25,6 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.repackaged.com.google.datastore.v1.CompositeFilter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -49,8 +44,13 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 @WebServlet(name = "dati", value = {"/helloTesina02"}) 
+@MultipartConfig(
+		  fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
+		  maxFileSize = 1024 * 1024 * 10,      // 10 MB
+		  maxRequestSize = 1024 * 1024 * 100   // 100 MB
+		)
 public class DATI extends HttpServlet{
-	int i=1; // ho messo un contatore unico perchè se la i si replica poi i file sul server vengono sovrascritti
+	int i=14; // ho messo un contatore unico perchè se la i si replica poi i file sul server vengono sovrascritti
   private UserService us;
   private DatastoreService ds;
   
