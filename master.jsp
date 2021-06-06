@@ -76,6 +76,17 @@ color:#00326E;
 border-right:1px solid !important;
 }
 
+input{
+    color: -internal-light-dark(black, white);
+    appeareance:none;
+}
+
+option{
+backgorund-color:white;
+color:black;
+appearance: none;
+}
+
 .counter_wrapper,
 .counter_wrapper_below {
   display: -webkit-box;
@@ -316,7 +327,7 @@ function drawVisualization() {
           hAxis: {title: 'Year'},
           seriesType: 'bars',
           series: {5: {type: 'line'}},
-          chartArea:{left:40,right:20,top:50,width:'80%',height:'80%'},
+          chartArea:{left:40,right:20,top:50,width:'100%',height:'100%'},
         }
         
         var chart1 = new google.visualization.PieChart(document.getElementById('chart1_div'));
@@ -380,7 +391,7 @@ function drawVisualization() {
 
 </script>
 </head>
-
+<body style="background-color:#e0ebeb;">
 <body>
 
 	<%
@@ -412,11 +423,11 @@ function drawVisualization() {
 	
 	<div class="container-fluid text-center" style="background-color:White;">
 		<p> <font size="10"><font face="Arial">Sei nel sito Prefettura e Adolescenza! eventi delle scuole della provincia di Reggio Emilia!</font> </FONT> </p>
-		<p> <font size="7"><font face="Arial">Qui puoi consultare gli eventi delle scuole della provincia di Reggio Emilia su temi critici quali droghe, alcol e bullismo</font> </FONT> </p>
+		<p> <font size="6"><font face="Arial">Qui puoi consultare gli eventi delle scuole della provincia di Reggio Emilia su temi critici quali droghe, alcol e bullismo</font> </FONT> </p>
 		<img src="stemmareggio.jpeg"  width="200" height="200">
-			<p>Qui puoi inserire o consultare dati sugli eventi tenutisi nella provincia di Reggio Emilia</p>
+			<p><FONT COLOR="#595959" size="4">Qui puoi inserire o consultare dati sugli eventi tenutisi nella provincia di Reggio Emilia</FONT></p>
 			<%if(adminDB==true){ %>
-			<p>Per aggiungere un utente vai in fondo alla pagina</p>
+			<p><FONT size="4">Per aggiungere un utente vai in fondo alla pagina</FONT></p>
 			<%}%>
 		
 		<h6>Stringa che esce dalla query: name:<%=usDB%> pw:<%=pwDB%> admin:<%=adminDB%></h6>
@@ -491,24 +502,40 @@ function drawVisualization() {
 		<div class="container-fluid text-center" style="background-color:MistyRose;">
 		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-map-marker"></span> MAPPA</font></font></font></p>
 			<div id="mapId" style="position: relative; top: 0; left: 70; right:70; width: 90%; height: 70%;"></div>
+			
 			<script>
 				//MAPPA
-				var lat=44.7007475271964;
-				var longi=10.633781921287271;
+				var lat = 44.7007;
+				var longi= 10.6337;
+				//String s = "Istituto SCaruffiLeviTricolore";
 		
-				var map = new L.map("mapId").setView([44.7007, 10.6337], 11);
+				var map = new L.map("mapId").setView([44.7007, 10.6337], 12);
 	
 				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			   	 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 			    	maxZoom: 17,
 				}).addTo(map);
 				
+				<%
+				ArrayList<String> scuole = new ArrayList<String>();
+				scuole = d.getScuole();
+				ArrayList<String> latitudini = new ArrayList<String>();
+				latitudini = d.getLat();
+				ArrayList<String> longitudini = new ArrayList<String>();
+				longitudini = d.getLongi();
 				
-				L.marker([lat, longi]).addTo(map)
-			    	.bindPopup('<b>Istituto ScaruffiLeviTricolore</b><br>Tutti i tuoi eventi sono qui')
-			    	.openPopup();
+				for(int i = 0; i < scuole.size() ; i++){
+					String s = scuole.get(i).toString();
+					Double lat = Double.parseDouble(latitudini.get(i));
+					Double longi = Double.parseDouble(longitudini.get(i));
+					%>
+
+					L.marker([<%=lat%>, <%=longi%>]).addTo(map).bindPopup('<b><%=s%></b>');
+
+				<%}%>			
 				
 			</script>
+			
 		</div>
 		
 	</article>
@@ -546,16 +573,16 @@ function drawVisualization() {
 			<form method="post" id="newScuola" action="/helloTesina01">
 				<table>
 					<tr>
-						<td><label for="scuola"><b>Scuola</b></label></td>
-						<td><input type="text" id="Scuola" placeholder="Inserire il nome della scuola" name="scuola" required><br/></td>
+						<td><label for="scuola" style="width:100px"><b>Scuola</b></label></td>
+						<td><input type="text" style="width:250px" id="Scuola" placeholder="Inserire il nome della scuola" name="scuola" required><br/></td>
 					</tr>
 					<tr>
-						<td><label for="lat"><b>Latitudine  </b></label></td>
-						<td><input type="number" id="lat" step="0.0000000001" min="0" max="100" placeholder="Inserisci la latitudine" name="lat" required><br/></td>
+						<td><label for="lat" style="width:100px"><b>Latitudine  </b></label></td>
+						<td><input type="number" style="width:250px" id="lat" step="0.0000000000001" min="0" max="100" placeholder="Inserisci la latitudine" name="lat" required><br/></td>
 					</tr>
 					<tr>
-						<td><label for="longi"><b>Longitudine  </b></label></td>
-						<td><input type="number" id="longi" step="0.0000000001" min="0" max="100" placeholder="Inserisci la longitudine" name="longi" required><br/></td>
+						<td><label for="longi" style="width:100px"><b>Longitudine  </b></label></td>
+						<td><input type="number" style="width:250px" id="longi" step="0.0000000000001" min="0" max="100" placeholder="Inserisci la longitudine" name="longi" required><br/></td>
 					</tr>
 					<tr><td></td><td><button type="submit" name="addScuola" value="addScuola">Aggiungi</button></td></tr>
 				</table>
@@ -565,26 +592,30 @@ function drawVisualization() {
 	
 	<!-- AGGIUNGI EVENTI (FILE) -->
 	<article>
-		<div class="container-fluid text-center" style=" height: 300px;">
-			<p><font size="4"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span> Aggiungi eventi</font></font></font></p>
+		<div class="container-fluid text-center" style=" height: 400px;">
+			<p><font size="4"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span><b> Aggiungi eventi</b></font></font></font></p>
 			<!-- COLLEGARE MENU DROPDOWN CON SCUOLE  -->
-			Aggiungi un file .csv con degli eventi:
-			
-								<form method="post" id="addFile" action="/helloTesina01">
-								<label for="scuola" placeholder="Scegli la scuola"></label>
-								<input list="scuole">
+			Aggiungi un file .csv con degli eventi
+					<form method="post" id="addFile" action="/helloTesina02">
+						<table>
+							<tr><td><label for="scuola" style="width:300px" placeholder="Scuola">Seleziona la scuola:</label></td>
+							<td><input list="scuole" style="width:400px">
 								<datalist id="scuole">
-								<!-- qui ci va la lista delle scuole 
-								< %for(int i=0; i< d.getScuole().size() ; i++){%>
-									<option value="< %=//d.getScuole().get(i) %>internet explorer">
-								< %}%>-->
-								<!--  <option value="Internet Explorer">-->
-								</datalist>
-								
-								<label for="file"></label>
-								<!--<span>--><input id="picker" type="file"><!-- </span>-->
-								<script src="LETTURA_CODICE.js"></script>
-								</form>										
+									<!-- qui ci va la lista delle scuole -->
+									<%for(int i = 0; i < d.getScuole().size() ; i++){
+										String s = d.getScuole().get(i).toString();%>
+										<option value="<%=s%>">
+									<%}%>
+								</datalist></td></tr>
+								<br>
+							 <tr><td><span><label for="file">Select a file:</label></td>
+							 <td><input id="picker" type="file" style="width:400px" name="picker"></span><td><tr>
+	  					</table>
+	  						 
+							<!-- lasciamo questo script? -->
+							<script src="LETTURA_CODICE.js"></script>
+						
+					</form>										
 									
 		</div>
 	</article>
