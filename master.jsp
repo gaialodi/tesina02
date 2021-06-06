@@ -596,7 +596,7 @@ function drawVisualization() {
 			<p><font size="4"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span><b> Aggiungi eventi</b></font></font></font></p>
 			<!-- COLLEGARE MENU DROPDOWN CON SCUOLE  -->
 			Aggiungi un file .csv con degli eventi
-					<form method="post" id="addFile" action="/helloTesina02">
+					<form method="post" id="addFile" action="/helloTesina02" enctype="multipart/form-data">
 						<table>
 							<tr><td><label for="scuola" style="width:300px" placeholder="Scuola">Seleziona la scuola:</label></td>
 							<td><input list="scuole" style="width:400px">
