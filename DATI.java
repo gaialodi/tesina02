@@ -1,5 +1,3 @@
-package Tiw2021.Tesina00;
-
 package tiw2021.puffo;
 
 import java.io.BufferedReader;
@@ -26,22 +24,14 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.repackaged.com.google.datastore.v1.CompositeFilter;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
+
 
 @WebServlet(name = "dati", value = {"/helloTesina02"}) 
 @MultipartConfig(
@@ -50,7 +40,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 		  maxRequestSize = 1024 * 1024 * 100   // 100 MB
 		)
 public class DATI extends HttpServlet{
-	int i=14; // ho messo un contatore unico perchè se la i si replica poi i file sul server vengono sovrascritti
+	int i=1; // ho messo un contatore unico perchè se la i si replica poi i file sul server vengono sovrascritti
   private UserService us;
   private DatastoreService ds;
   
@@ -71,7 +61,7 @@ public class DATI extends HttpServlet{
 		    BufferedReader br = new BufferedReader(new InputStreamReader(filecontent, "UTF-8"));
   
 		  String line;
-		  br.readLine(); //salta un RIGA nel file		 
+		 // br.readLine(); //salta un RIGA nel file		 
 
 		  while((line=br.readLine())!=null){
 			  String[] e=line.split(";");
@@ -222,6 +212,105 @@ public class DATI extends HttpServlet{
 	 					  }
 	 return eventi_totali;
  }
+ 
+ public Integer getEventitot(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 Integer eventi_totali = 0;
+	 for (int j = 0; j < list.size(); j++) {
+		eventi_totali++;
+	}
+	 return eventi_totali;
+ }
+ 
+ public Integer getStudentiTot(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 Integer studenti_totali = 0;
+	 for (Entity e: list) {
+		studenti_totali+=Integer.valueOf(e.getProperty("numero_studenti_coinvolti").toString());
+	}
+	 return studenti_totali;
+ }
+ 
+ public Integer getOreTot(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 Integer ore_totali = 0;
+	 for (Entity e: list) {
+		ore_totali+=Integer.valueOf(e.getProperty("numero_ore").toString());
+	}
+	 return ore_totali;
+ }
+ 
+ public String getScuolaVirtuosa(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 List<Entity> list2 = pq.asList(FetchOptions.Builder.withLimit(100));
+	 int scuola= 0;
+		int cont=0;
+		String chiave="";
+		int tema;
+		for(Entity e:list)
+			{
+			cont=0;
+				for(Entity f:list2)
+				{
+					if(e.getProperty("Scuola")==f.getProperty("Scuola"))
+					{
+					cont+=1;
+					}
+				
+				}
+				if(cont>scuola)  //questo if controlla se il tema corrente è stato trattato più volte del tema piu trattato dall'iterazione precedente
+				{
+					tema=cont;
+					chiave=e.getProperty("Scuola").toString();
+				}
+			
+			}
+		return chiave;
+	}
+ 
+ public String getTema(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 List<Entity> list2 = pq.asList(FetchOptions.Builder.withLimit(100));
+	 int scuola= 0;
+		int cont=0;
+		String chiave="";
+		int tema;
+		for(Entity e:list)
+			{
+			cont=0;
+				for(Entity f:list2)
+				{
+					if(e.getProperty("Parola_chiave")==f.getProperty("Parola_chiave"))
+					{
+					cont+=1;
+					}
+				
+				}
+				if(cont>scuola)  //questo if controlla se il tema corrente è stato trattato più volte del tema piu trattato dall'iterazione precedente
+				{
+					tema=cont;
+					chiave=e.getProperty("Parola_chiave").toString();
+				}
+			
+			}
+		return chiave;
+	}
+	 
  
  //fare lista di filtri
  public Integer getTutto(String CampoDaCercare, String AS){
