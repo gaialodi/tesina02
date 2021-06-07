@@ -1,11 +1,13 @@
 <html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="tiw2021.puffo.HelloAppEngine" %>
+<%@ page import="Tiw2021.Tesina00.HelloAppEngine" %>
 <%@ page import ="java.util.*" %>
-<%@ page import= "com.google.appengine.api.users.*" %>
-<%@ page import="tiw2021.puffo.*" %>
-<%@ page import="tiw2021.puffo.DATI" %>
-<%@ page import="java.util.*" %>
+<%@ page import= "com.google.appengine.api.users.*"%>
+<%@ page import= "com.google.appengine.api.datastore.Entity" %>
+<%@ page import="Tiw2021.Tesina00.*" %>
+<%@ page import="Tiw2021.Tesina00.login" %>
+<%@ page import="Tiw2021.Tesina00.DATI" %>
+	
 <head>
 <title>Prefettura e adolescenza</title>
 <meta charset="utf-8">
@@ -32,11 +34,14 @@
 .body modifica tutto quello che c'è sotto alla barra di navigazione -->
 	
 <style>
+
 .navbar-brand {
 	cursor: pointer;
 }
+
 img{
 }
+
 .navbar {
 	position: fixed;
 	top: 0;
@@ -53,10 +58,12 @@ img{
 	background-color: #00326E;
  	color: white;
   }
+
 .container-fluid, container{
 padding-top: 60px;
 font-size:16px;
 }
+
 body{
 padding:90px solid;
 margin-top:50px;
@@ -64,18 +71,22 @@ background-color:MistyRose;
 font: Montserrat;
 color:#00326E;
 }
+
 .tbn{
 border-right:1px solid !important;
 }
+
 input{
     color: -internal-light-dark(black, white);
     appeareance:none;
 }
+
 option{
 backgorund-color:white;
 color:black;
 appearance: none;
 }
+
 .counter_wrapper,
 .counter_wrapper_below {
   display: -webkit-box;
@@ -94,12 +105,14 @@ appearance: none;
   width: 100%;
   margin: auto;
 }
+
 .counter_wrapper_below {
   width: 680px;
   height: 190px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
 .col_1,
 .col_2,
 .col_3,
@@ -112,6 +125,7 @@ appearance: none;
   background-color:MistyRose;
   vertical-align: top;
 }
+
 .col_5,
 .col_6,
 .col_7 {
@@ -120,70 +134,84 @@ appearance: none;
   background-color: #f7f6f2;
   vertical-align: top;
 }
+
 .filetto_verticale_top {
   border-right: 1px solid rgba(31, 34, 38, 0.5);
 }
+
 .filetto_verticale_top_dotted {
   border-right: 1px dotted rgba(31, 34, 38, 0.5);
 }
+
 hr.filetto_verticale {
   border-top: 1px solid rgba(31, 34, 38, 0.5);
   height: 100px;
 }
+
 #num_1,
 #variazione_1,
 #total_1 {
   color: #FF3366;
   font-size: 20px;
 }
+
 #num_3,
 #variazione_3,
 #total_3 {
   color: #19b290;
 font-size: 20px;
 }
+
 #num_4,
 #variazione_4,
 #total_4 {
   color: #ef4e63;
   font-size: 25px;
 }
+
 #num_5_top,
 #variazione_5_top,
 #total_5_top {
   color: #f38384;
 }
+
 #num_6_top,
 #variazione_6_top,
 #total_6_top {
-  color: #6633FF;
+  color: black;
   font-size: 25px;
 }
+
 #num_7_top,
 #variazione_7_top,
 #total_7_top {
   color: #f38384;
 }
+
 #num_5_top,
 #num_6_top,
 #num_7_top {
   font-weight: 800;
 }
+
 #num_5,
 #variazione_5,
 #total_5 {
   color: #ef4e63;
 }
+
 #num_6,
 #variazione_6,
 #total_6 {
   color: #aa0438;
 }
+
 #num_7,
 #variazione_7,
 #total_7 {
   color: #f38384;
 }
+
 .timer {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 800;
@@ -194,6 +222,7 @@ font-size: 20px;
   margin: 15px 0;
   font-size: 25px;
 }
+
 .timer_below {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 800;
@@ -204,6 +233,7 @@ font-size: 20px;
   margin: 15px 0;
   font-size: 50px;
 }
+
 .count-text {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 400;
@@ -214,6 +244,7 @@ font-size: 20px;
   margin: 0px;
   font-size: 14px;
 }
+
 .count-text_var {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 400;
@@ -226,6 +257,7 @@ font-size: 20px;
   font-size: 16px;
   margin-bottom: 15px;
 }
+
 .count-text_total {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 600;
@@ -237,21 +269,27 @@ font-size: 20px;
   margin: 0px;
   font-size: 16px;
 }
+
 #picker, #file-upload-button{
 magrin-left:200px;
 margin-right:200px;
 }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type=number] {
   -moz-appearance: textfield;
 }
+
 form{
 font-size: 16px;
+
 }
+
 </style>
 
 <%
@@ -269,6 +307,7 @@ Integer ore19= Integer.valueOf(d.getOre("2019/2020"));
 Integer ore20= Integer.valueOf(d.getOre("2020/2021"));
 %>
 <script type="text/javascript">
+
 //GRAFICI
 google.charts.setOnLoadCallback(drawVisualization);
 function drawVisualization() {
@@ -349,17 +388,16 @@ function drawVisualization() {
         var chart3 = new google.visualization.PieChart(document.getElementById('chart3_div'));
         chart3.draw(data3, options3);
 }
+
 </script>
 </head>
-<body style="background-color:#e0ebeb;">
 <body>
 
 	<%
 	String user=(String)session.getAttribute("username");
 	String usDB=(String)session.getAttribute("usDB");
 	String pwDB=(String)session.getAttribute("pwDB");
-	boolean adminDB=(boolean)session.getAttribute("admDB");
-	Integer boh = d.getTutto("AS", "2018/2019");%>
+	boolean adminDB=(boolean)session.getAttribute("admDB");%>
 	
 	<div id="main">
 		<nav class="navbar navbar-inverse navbar-default">
@@ -383,42 +421,40 @@ function drawVisualization() {
 	
 	<div class="container-fluid text-center" style="background-color:White;">
 		<p> <font size="10"><font face="Arial">Sei nel sito Prefettura e Adolescenza! eventi delle scuole della provincia di Reggio Emilia!</font> </FONT> </p>
-		<p> <font size="6"><font face="Arial">Qui puoi consultare gli eventi delle scuole della provincia di Reggio Emilia su temi critici quali droghe, alcol e bullismo</font> </FONT> </p>
+		<p> <font size="6"><font face="Arial">Su questo sito puoi consultare gli eventi delle scuole della provincia di Reggio Emilia su temi critici quali droghe, alcol e bullismo.</font> </FONT> </p>
 		<img src="stemmareggio.jpeg"  width="200" height="200">
-			<p><FONT COLOR="#595959" size="4">Qui puoi inserire o consultare dati sugli eventi tenutisi nella provincia di Reggio Emilia</FONT></p>
 			<%if(adminDB==true){ %>
-			<p><FONT size="4">Per aggiungere un utente vai in fondo alla pagina</FONT></p>
+			<p><FONT size="4">Per aggiungere un utente, una scuola o degli eventi vai in fondo alla pagina</FONT></p>
 			<%}%>
 		
 		<h6>Stringa che esce dalla query: name:<%=usDB%> pw:<%=pwDB%> admin:<%=adminDB%></h6>
-		<h6>query getTutto: <%=boh%></h6>
 	</div>
 
 	<!-- DATI / CONTATORI -->
 	<article id="Dati">
 		<div class="container-fluid text-center" >
-			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-file"></span>  DATI RACCOLTI</font></font></font></p>
+			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-file"></span><b> DATI RACCOLTI</b></font></font></font></p>
 			<!-- CONTATORE -->
 				<div class="counter_wrapper">
 					<div class="counter col_4 filetto_verticale_top">
 						<p class="count-text" id="count_text_4">EVENTI<br>SVOLTI</p>
-						<h2 class="timer count-number" id="num_4"><%=d.getEventitot()%></h2>
+						<h2 class="timer count-number" id="num_4"><span id="contatore_eventi"><%=d.getEventitot()%></span></h2>
 					</div>
 					<div class="counter col_2 filetto_verticale_top">
 						<p class="count-text" id="count_text_2">STUDENTI<br>PARTECIPANTI<br></p>
-						<h2 class="timer count-number" id="num_2"><%=d.getStudentiTot() %></h2>
+						<h2 class="timer count-number" id="num_2"><span id="numero_studenti"><%=d.getStudentiTot() %></span></h2>
 					</div>
 					<div class="counter col_3 filetto_verticale_top">
 						<p class="count-text" id="count_text_3">SCUOLA<br>VIRTUOSA<br></p>
-						<h2 class="timer count-number" id="num_3"><%=d.getScuolaVirtuosa() %></h2>
+						<h2 class="timer count-number" id="num_3"><span id="scuola" ><%=d.getScuolaVirtuosa() %></span></h2>
 					</div>
 					<div class="counter col_1 filetto_verticale_top">
 						<p class="count-text" id="count_text_1">TEMA<br>PRINCIPALE</p>
-						<h2 class="timer count-number" id="num_1"><%=d.getTema()%></h2>
+						<h2 class="timer count-number" id="num_1"><span id="tema_trattato"><%=d.getTema()%></span></h2>
 					</div>
 					<div class="counter col_6_top filetto_verticale_top">
 						<p class="count-text" id="count_text_6_top">ORE<br>SVOLTE</p>
-						<h2 class="timer count-number" id="num_6_top"><%=d.getOreTot() %></h2>
+						<h2 class="timer count-number" id="num_6_top"><span id="ore" ><%=d.getOreTot() %></span></h2>
 					</div>
 				</div>
 				<!-- FINE CONTATORE -->
@@ -430,7 +466,7 @@ function drawVisualization() {
 	
 	<article id="Grafici">
 		<div class="container-fluid text-center" style="background-color:White;">
-			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-stats"></span>   CHARTS</font></font></font></p>
+			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-stats"></span><b>  CHARTS</b></font></font></font></p>
 			<div class="row">
 				<div id="tbn" class="col-sm-4 text-center">	 	
 					<div id="chart1_div" style="width: 100%; height: 60%; "></div>
@@ -448,8 +484,9 @@ function drawVisualization() {
 	<!-- VISUALIZZA TUTTI GLI EVENTI -->
 	<article id="Eventi">
 		<div class="container-fluid text-center" style=" height: 200px;">
-			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder-open"></span>   EVENTI</font></font></font></p>
+			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder-open"></span><b>  EVENTI</b></font></font></font></p>
 			<table>
+			
 			<tr><td>Evento 1 </td><td> Scuola </td><td> tema</td></tr>
 			<tr><td>Evento 2 </td><td> Scuola </td><td> </td></tr>
 			<tr><td>Evento 3 </td><td> </td><td> </td></tr>
@@ -460,7 +497,7 @@ function drawVisualization() {
 	<!-- MAPPA  -->
 	<article id="Map">
 		<div class="container-fluid text-center" style="background-color:MistyRose;">
-		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-map-marker"></span> MAPPA</font></font></font></p>
+		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-map-marker"></span><b>MAPPA</b></font></font></font></p>
 			<div id="mapId" style="position: relative; top: 0; left: 70; right:70; width: 90%; height: 70%;"></div>
 			
 			<script>
@@ -489,7 +526,9 @@ function drawVisualization() {
 					Double lat = Double.parseDouble(latitudini.get(i));
 					Double longi = Double.parseDouble(longitudini.get(i));
 					%>
+
 					L.marker([<%=lat%>, <%=longi%>]).addTo(map).bindPopup('<b><%=s%></b>');
+
 				<%}%>			
 				
 			</script>
@@ -501,7 +540,7 @@ function drawVisualization() {
 	<!-- VISUALIZZA TUTTE LE SCUOLE -->
 	<article id="Scuole">
 		<div class="container-fluid text-center">
-		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span>Scuole</font></font></font></p>
+		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span><b>Scuole</b></font></font></font></p>
 		<table>
 			<tr><td>Scuola 1</td></tr>
 			<tr><td>Scuola 2</td></tr>
@@ -513,10 +552,17 @@ function drawVisualization() {
 	
 	<!-- CERCA EVENTO -->
 	<article id="CercaEvento">
-	<div class="container-fluid text-center" style=" height: 200px;">
-	<p><FONT COLOR="#000080"><font size="4"><font face="Arial"><span class="glyphicon glyphicon-tags"></span> Cerca per parole chiave</font></font></FONT></p>
-	
-	</div>
+		<div class="container-fluid text-center" style=" height: 200px;">
+			<p><FONT COLOR="#000080"><font size="4"><font face="Arial"><span class="glyphicon glyphicon-tags"></span> Cerca per parole chiave</font></font></FONT></p>
+			<datalist id="scuole">
+				<!-- qui ci va la lista delle scuole -->
+				<!-- DA FAREEEEEE 
+				< %for(int i = 0; i < d.getPC().size() ; i++){
+					String s = d.getPC().get(i).toString();%>
+					<option value="< %=s%>">
+				< %}%>-->
+			</datalist>
+		</div>
 	</article>
 	
 	<!-- VISIBILE SOLO AGLI AMMINISTRATORI -->
@@ -525,7 +571,7 @@ function drawVisualization() {
 	<!-- AGGIUNGI SCUOLE -->
 	<article id="Aggiungi scuole">
 		<div class="container-fluid text-center" style="height:300px;">
-			<p><font size="4"> <FONT COLOR=" #000080"><font face="Arial">Aggiungi scuola</font></font></font></p>
+			<p><font size="4"> <FONT COLOR=" #000080"><font face="Arial"><b>Aggiungi scuola</b></font></font></font></p>
 			Inserisci la scuola che vuoi aggiunere
 			<!-- lo mando alla servlet login.java -->
 			<form method="post" id="newScuola" action="/helloTesina01">
@@ -549,10 +595,9 @@ function drawVisualization() {
 	</article>
 	
 	<!-- AGGIUNGI EVENTI (FILE) -->
-	<!-- AGGIUNGI EVENTI (FILE) -->
 	<article>
 		<div class="container-fluid text-center" style=" height: 400px;">
-			<p><font size="4"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span><b> Aggiungi eventi</b></font></font></font></p>
+			<p><font size="4"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder"></span><b>Aggiungi eventi</b></font></font></font></p>
 			<!-- COLLEGARE MENU DROPDOWN CON SCUOLE  -->
 			Aggiungi un file .csv con degli eventi
 					<form method="post" id="addFile" action="/helloTesina02" enctype="multipart/form-data">
@@ -569,21 +614,21 @@ function drawVisualization() {
 								<br>
 							 <tr><td><span><label for="file">Select a file:</label></td>
 							 <td><input id="picker" type="file" style="width:400px" name="picker"></span><td><tr>
+							 <tr><td><button type="submit" class="btn btn-primary" style="position: absolute; left: 25%; margin-top: 5px;">Aggiungi</button></td><td></td></tr>
 	  					</table>
 	  						 
 							<!-- lasciamo questo script? -->
-							<!--  <script src="LETTURA_CODICE.js"></script>-->
+							<script src="LETTURA_CODICE.js"></script>
 						
 					</form>										
 									
 		</div>
 	</article>
-
 	
 	<!-- AGGIUNGI UTENTE -->
 	<article id="Aggiungi utente">
 		<div class="container-fluid text-center" style=" height: 200px;">
-			<p><font size="4"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span> Aggiungi utente</font></font></font></p>
+			<p><font size="4"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span><b>Aggiungi utente</b></font></font></font></p>
 			Inserisci i dati dell'utente che vuoi aggiunere <br>
 			<!-- lo mando alla servlet login.java -->
 			<form method="post" id="newUser" action="/helloTesina01">
