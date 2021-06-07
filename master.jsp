@@ -34,14 +34,11 @@
 .body modifica tutto quello che c'è sotto alla barra di navigazione -->
 	
 <style>
-
 .navbar-brand {
 	cursor: pointer;
 }
-
 img{
 }
-
 .navbar {
 	position: fixed;
 	top: 0;
@@ -58,12 +55,10 @@ img{
 	background-color: #00326E;
  	color: white;
   }
-
 .container-fluid, container{
 padding-top: 60px;
 font-size:16px;
 }
-
 body{
 padding:90px solid;
 margin-top:50px;
@@ -71,22 +66,18 @@ background-color:MistyRose;
 font: Montserrat;
 color:#00326E;
 }
-
 .tbn{
 border-right:1px solid !important;
 }
-
 input{
     color: -internal-light-dark(black, white);
     appeareance:none;
 }
-
 option{
 backgorund-color:white;
 color:black;
 appearance: none;
 }
-
 .counter_wrapper,
 .counter_wrapper_below {
   display: -webkit-box;
@@ -105,14 +96,12 @@ appearance: none;
   width: 100%;
   margin: auto;
 }
-
 .counter_wrapper_below {
   width: 680px;
   height: 190px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
 .col_1,
 .col_2,
 .col_3,
@@ -125,7 +114,6 @@ appearance: none;
   background-color:MistyRose;
   vertical-align: top;
 }
-
 .col_5,
 .col_6,
 .col_7 {
@@ -134,84 +122,70 @@ appearance: none;
   background-color: #f7f6f2;
   vertical-align: top;
 }
-
 .filetto_verticale_top {
   border-right: 1px solid rgba(31, 34, 38, 0.5);
 }
-
 .filetto_verticale_top_dotted {
   border-right: 1px dotted rgba(31, 34, 38, 0.5);
 }
-
 hr.filetto_verticale {
   border-top: 1px solid rgba(31, 34, 38, 0.5);
   height: 100px;
 }
-
 #num_1,
 #variazione_1,
 #total_1 {
   color: #FF3366;
   font-size: 20px;
 }
-
 #num_3,
 #variazione_3,
 #total_3 {
   color: #19b290;
 font-size: 20px;
 }
-
 #num_4,
 #variazione_4,
 #total_4 {
   color: #ef4e63;
   font-size: 25px;
 }
-
 #num_5_top,
 #variazione_5_top,
 #total_5_top {
   color: #f38384;
 }
-
 #num_6_top,
 #variazione_6_top,
 #total_6_top {
   color: black;
   font-size: 25px;
 }
-
 #num_7_top,
 #variazione_7_top,
 #total_7_top {
   color: #f38384;
 }
-
 #num_5_top,
 #num_6_top,
 #num_7_top {
   font-weight: 800;
 }
-
 #num_5,
 #variazione_5,
 #total_5 {
   color: #ef4e63;
 }
-
 #num_6,
 #variazione_6,
 #total_6 {
   color: #aa0438;
 }
-
 #num_7,
 #variazione_7,
 #total_7 {
   color: #f38384;
 }
-
 .timer {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 800;
@@ -222,7 +196,6 @@ font-size: 20px;
   margin: 15px 0;
   font-size: 25px;
 }
-
 .timer_below {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 800;
@@ -233,7 +206,6 @@ font-size: 20px;
   margin: 15px 0;
   font-size: 50px;
 }
-
 .count-text {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 400;
@@ -244,7 +216,6 @@ font-size: 20px;
   margin: 0px;
   font-size: 14px;
 }
-
 .count-text_var {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 400;
@@ -257,7 +228,6 @@ font-size: 20px;
   font-size: 16px;
   margin-bottom: 15px;
 }
-
 .count-text_total {
   font-family: "SoleSans", Arial, Helvetica, sans-serif;
   font-weight: 600;
@@ -269,27 +239,21 @@ font-size: 20px;
   margin: 0px;
   font-size: 16px;
 }
-
 #picker, #file-upload-button{
 magrin-left:200px;
 margin-right:200px;
 }
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 input[type=number] {
   -moz-appearance: textfield;
 }
-
 form{
 font-size: 16px;
-
 }
-
 </style>
 
 <%
@@ -305,9 +269,10 @@ Integer ev20= d.getEventi("2020/2021");
 Integer ore18= Integer.valueOf(d.getOre("2018/2019"));  
 Integer ore19= Integer.valueOf(d.getOre("2019/2020"));
 Integer ore20= Integer.valueOf(d.getOre("2020/2021"));
+
+String key =request.getParameter("key");
 %>
 <script type="text/javascript">
-
 //GRAFICI
 google.charts.setOnLoadCallback(drawVisualization);
 function drawVisualization() {
@@ -388,7 +353,6 @@ function drawVisualization() {
         var chart3 = new google.visualization.PieChart(document.getElementById('chart3_div'));
         chart3.draw(data3, options3);
 }
-
 </script>
 </head>
 <body>
@@ -526,9 +490,7 @@ function drawVisualization() {
 					Double lat = Double.parseDouble(latitudini.get(i));
 					Double longi = Double.parseDouble(longitudini.get(i));
 					%>
-
 					L.marker([<%=lat%>, <%=longi%>]).addTo(map).bindPopup('<b><%=s%></b>');
-
 				<%}%>			
 				
 			</script>
@@ -554,14 +516,33 @@ function drawVisualization() {
 	<article id="CercaEvento">
 		<div class="container-fluid text-center" style=" height: 200px;">
 			<p><FONT COLOR="#000080"><font size="4"><font face="Arial"><span class="glyphicon glyphicon-tags"></span> Cerca per parole chiave</font></font></FONT></p>
-			<datalist id="scuole">
+			
+			<form method="post" id="search" action="#key">
+						<table>
+							<tr><td><label for="scuola" style="width:300px" placeholder="Scuola">Seleziona la parola chiave:</label></td>
+							<td><input list="scuole" style="width:400px">
+							<select name="key">
+								
+									<!-- qui ci va la lista delle scuole -->
+									<%for(int i = 0; i < d.getTemi().size() ; i++){
+										 String s = d.getTemi().get(i).toString();%>
+										<option value="<%=s%>"></option>
+									<%}%>
+								</td></tr>
+								</select>
+								<br>
+	  					</table>
+							
+						
+					</form>			
+					<%=d.getTemi().size() %>				
 				<!-- qui ci va la lista delle scuole -->
 				<!-- DA FAREEEEEE 
 				< %for(int i = 0; i < d.getPC().size() ; i++){
 					String s = d.getPC().get(i).toString();%>
 					<option value="< %=s%>">
 				< %}%>-->
-			</datalist>
+		<%=d.SearchKey(key)%>
 		</div>
 	</article>
 	
@@ -607,7 +588,8 @@ function drawVisualization() {
 								<datalist id="scuole">
 									<!-- qui ci va la lista delle scuole -->
 									<%for(int i = 0; i < d.getScuole().size() ; i++){
-										String s = d.getScuole().get(i).toString();%>
+										String s = d.getScuole().get(i).toString();
+										System.out.println("Bello figo");%>
 										<option value="<%=s%>">
 									<%}%>
 								</datalist></td></tr>
