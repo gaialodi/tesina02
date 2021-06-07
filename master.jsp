@@ -406,7 +406,7 @@ function drawVisualization() {
 					</div>
 					<div class="counter col_2 filetto_verticale_top">
 						<p class="count-text" id="count_text_2">STUDENTI<br>PARTECIPANTI<br></p>
-						<h2 class="timer count-number" id="num_2"></h2>
+						<h2 class="timer count-number" id="num_2"><%=d.getStudentiTot() %></h2>
 					</div>
 					<div class="counter col_3 filetto_verticale_top">
 						<p class="count-text" id="count_text_3">SCUOLA<br>VIRTUOSA<br></p>
@@ -418,7 +418,7 @@ function drawVisualization() {
 					</div>
 					<div class="counter col_6_top filetto_verticale_top">
 						<p class="count-text" id="count_text_6_top">ORE<br>SVOLTE</p>
-						<h2 class="timer count-number" id="num_6_top"></h2>
+						<h2 class="timer count-number" id="num_6_top"><%=d.getOreTot() %></h2>
 					</div>
 				</div>
 				<!-- FINE CONTATORE -->
