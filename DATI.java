@@ -232,6 +232,7 @@ public class DATI extends HttpServlet{
 	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
 	 Integer studenti_totali = 0;
 	 for (Entity e: list) {
+		 if(!e.getProperty("numero_studenti_coinvolti").equals(""))
 		studenti_totali+=Integer.valueOf(e.getProperty("numero_studenti_coinvolti").toString());
 	}
 	 return studenti_totali;
@@ -244,6 +245,7 @@ public class DATI extends HttpServlet{
 	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
 	 Integer ore_totali = 0;
 	 for (Entity e: list) {
+		 if(!e.getProperty("numero_studenti_coinvolti").equals(""))
 		ore_totali+=Integer.valueOf(e.getProperty("numero_ore").toString());
 	}
 	 return ore_totali;
@@ -264,7 +266,7 @@ public class DATI extends HttpServlet{
 			cont=0;
 				for(Entity f:list2)
 				{
-					if(e.getProperty("Scuola")==f.getProperty("Scuola"))
+					if(e.getProperty("Scuola").equals(f.getProperty("Scuola")))
 					{
 					cont+=1;
 					}
@@ -295,7 +297,7 @@ public class DATI extends HttpServlet{
 			cont=0;
 				for(Entity f:list2)
 				{
-					if(e.getProperty("Parola_chiave")==f.getProperty("Parola_chiave"))
+					if(e.getProperty("Parola_chiave").equals(f.getProperty("Parola_chiave")))
 					{
 					cont+=1;
 					}
