@@ -33,6 +33,7 @@ import javax.servlet.http.Part;
 
 
 
+
 @WebServlet(name = "dati", value = {"/helloTesina02"}) 
 @MultipartConfig(
 		  fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -46,8 +47,14 @@ public class DATI extends HttpServlet{
   
   public void doPost(HttpServletRequest request, HttpServletResponse response)
 	      throws IOException {
+	  
 	  //importazione del file dalla form di inserimento
 	  System.out.println("BELLA LIIIII2222");
+	  DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+		 Query q = new Query("eventi");
+		 PreparedQuery pq = ds.prepare(q);
+		 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+		 i=list.size()+1;
 	  //leggere file
 	 try{
 		  us=UserServiceFactory.getUserService();
@@ -344,6 +351,18 @@ public class DATI extends HttpServlet{
 	 return scuole;
  }
  
+ public ArrayList getTemi(){
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 ArrayList<String>key_word= new ArrayList<String>();
+	 for(Entity e : list) {
+		 key_word.add(e.getProperty("parola_chiave").toString());
+	 }
+	 return key_word;
+ }
+ 
  //PRENDERE TUTTE LE LATITUDINI:
  public ArrayList getLat(){
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -373,5 +392,21 @@ public class DATI extends HttpServlet{
 	 }
 	 return latitudini;
  }
+ 
+ public List SearchKey(String parola) {
+		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+		 Query q = new Query("eventi");
+		 List<Filter> filters = new ArrayList<Filter>();
+		 q.setFilter(new FilterPredicate("parola_chiave",FilterOperator.EQUAL,parola));
+		 PreparedQuery pq = ds.prepare(q);
+		 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+		 ArrayList<String> root = new ArrayList<String>();
+		 for(Entity e:list)
+		 {
+			 root.add(e.getProperty("Titolo_Progetto").toString());
+		 }
+		return list;
+		 
+	}
  
  }
