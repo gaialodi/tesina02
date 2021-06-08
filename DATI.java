@@ -169,7 +169,27 @@ public class DATI extends HttpServlet{
  }
 
   //queries per prendere i dati dal datastore
-  
+	//Eventi con parola cercata
+  public ArrayList Search(String word)
+  {  
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 Query q = new Query("eventi");
+	 List<Filter> filters = new ArrayList<Filter>();
+	 q.setFilter(new FilterPredicate("Parola_chiave",FilterOperator.EQUAL,word));
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 if(list.size()!=0)
+	 {
+	 ArrayList<String> find=new ArrayList<String>();
+	 for(Entity e : list) {
+		 String ret=("["+e.getProperty("Scuola").toString()+" "+e.getProperty("Titolo_Progetto").toString()+" "+e.getProperty("AS").toString()+"]");
+		 find.add(ret);
+	 }
+	 return find;
+	 }
+	return null;
+  }
+	
   //STUDENTI per anno
   public Integer getStudenti(String AS){
 		 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
