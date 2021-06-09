@@ -1,4 +1,4 @@
-package tiw2021.puffo;
+package Tiw2021.Tesina00;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -33,6 +33,7 @@ import javax.servlet.http.Part;
 
 
 
+
 @WebServlet(name = "dati", value = {"/helloTesina02"}) 
 @MultipartConfig(
 		  fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -55,7 +56,7 @@ public class DATI extends HttpServlet{
 		 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
 		 i=list.size()+1;
 	  //leggere file
-	 try{
+	 try{			
 		  us=UserServiceFactory.getUserService();
 		  ds=DatastoreServiceFactory.getDatastoreService();
 
@@ -105,7 +106,7 @@ public class DATI extends HttpServlet{
    }
 
    br.close();
-   response.sendRedirect("master.jsp");
+   response.sendRedirect("master.jsp"); 
    
  }catch(Exception e){
 	 e.printStackTrace();
@@ -168,25 +169,27 @@ public class DATI extends HttpServlet{
  }
 
   //queries per prendere i dati dal datastore
-  public ArrayList Search(String word)
-  {  
+	//Eventi con parola cercata
+ public ArrayList Search(String word){  
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 	 Query q = new Query("eventi");
 	 List<Filter> filters = new ArrayList<Filter>();
 	 q.setFilter(new FilterPredicate("Parola_chiave",FilterOperator.EQUAL,word));
 	 PreparedQuery pq = ds.prepare(q);
-	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
-	 if(list.size()!=0)
-	 {
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(1000));
 	 ArrayList<String> find=new ArrayList<String>();
 	 for(Entity e : list) {
-		 String ret=("["+e.getProperty("Scuola").toString()+" "+e.getProperty("Titolo_Progetto").toString()+" "+e.getProperty("AS").toString()+"]");
+		 String ret=("Titolo Progetto: " +e.getProperty("Titolo_Progetto").toString()+", Scuola: "+e.getProperty("Scuola").toString()+", Anno Scolatico:"+e.getProperty("AS").toString());
 		 find.add(ret);
+		 
 	 }
+	 if(find.isEmpty()) {
+		 find.add("Non hai inserito nessuna parola chiave o non ci sono eventi con questa parola chiave");
+	 }
+	 System.out.println(find.size());
 	 return find;
-	 }
-	return null;
   }
+	
   //STUDENTI per anno
   public Integer getStudenti(String AS){
 		 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -398,6 +401,20 @@ public class DATI extends HttpServlet{
 				 latitudini.add(e.getProperty("longitudine").toString());
 	 }
 	 return latitudini;
+ }
+ 
+ public String getTutteScuole(){
+	 StringBuffer sb = new StringBuffer();
+	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+	 String s = null;
+	 Query q = new Query("scuole");
+	 PreparedQuery pq = ds.prepare(q);
+	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
+	 for(Entity e : list) {
+				 s=(""+e.getProperty("scuola").toString()+"<br>");
+				 sb.append(s);
+	 }
+	 return sb.toString();
  }
  
  
