@@ -33,7 +33,6 @@ import javax.servlet.http.Part;
 
 
 
-
 @WebServlet(name = "dati", value = {"/helloTesina02"}) 
 @MultipartConfig(
 		  fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -169,7 +168,6 @@ public class DATI extends HttpServlet{
  }
 
   //queries per prendere i dati dal datastore
-	//Eventi con parola cercata
   public ArrayList Search(String word)
   {  
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -189,7 +187,6 @@ public class DATI extends HttpServlet{
 	 }
 	return null;
   }
-	
   //STUDENTI per anno
   public Integer getStudenti(String AS){
 		 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -287,7 +284,6 @@ public class DATI extends HttpServlet{
 	 int scuola= 0;
 		int cont=0;
 		String chiave="";
-		int tema;
 		for(Entity e:list)
 			{
 			cont=0;
@@ -301,7 +297,7 @@ public class DATI extends HttpServlet{
 				}
 				if(cont>scuola)  //questo if controlla se il tema corrente è stato trattato più volte del tema piu trattato dall'iterazione precedente
 				{
-					tema=cont;
+					scuola=cont;
 					chiave=e.getProperty("Scuola").toString();
 				}
 			
@@ -315,10 +311,9 @@ public class DATI extends HttpServlet{
 	 PreparedQuery pq = ds.prepare(q);
 	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
 	 List<Entity> list2 = pq.asList(FetchOptions.Builder.withLimit(100));
-	 int scuola= 0;
 		int cont=0;
 		String chiave="";
-		int tema;
+		int tema=0;
 		for(Entity e:list)
 			{
 			cont=0;
@@ -330,11 +325,13 @@ public class DATI extends HttpServlet{
 					}
 				
 				}
-				if(cont>scuola)  //questo if controlla se il tema corrente è stato trattato più volte del tema piu trattato dall'iterazione precedente
+				if(cont>tema)  //questo if controlla se il tema corrente è stato trattato più volte del tema piu trattato dall'iterazione precedente
 				{
 					tema=cont;
 					chiave=e.getProperty("Parola_chiave").toString();
+					
 				}
+				
 			
 			}
 		return chiave;
@@ -371,17 +368,7 @@ public class DATI extends HttpServlet{
 	 return scuole;
  }
  
- public ArrayList getTemi(){
-	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-	 Query q = new Query("eventi");
-	 PreparedQuery pq = ds.prepare(q);
-	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
-	 ArrayList<String>key_word= new ArrayList<String>();
-	 for(Entity e : list) {
-		 key_word.add(e.getProperty("parola_chiave").toString());
-	 }
-	 return key_word;
- }
+ 
  
  //PRENDERE TUTTE LE LATITUDINI:
  public ArrayList getLat(){
@@ -413,20 +400,6 @@ public class DATI extends HttpServlet{
 	 return latitudini;
  }
  
- public List SearchKey(String parola) {
-		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-		 Query q = new Query("eventi");
-		 List<Filter> filters = new ArrayList<Filter>();
-		 q.setFilter(new FilterPredicate("parola_chiave",FilterOperator.EQUAL,parola));
-		 PreparedQuery pq = ds.prepare(q);
-		 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
-		 ArrayList<String> root = new ArrayList<String>();
-		 for(Entity e:list)
-		 {
-			 root.add(e.getProperty("Titolo_Progetto").toString());
-		 }
-		return list;
-		 
-	}
+ 
  
  }
