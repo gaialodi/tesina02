@@ -488,15 +488,31 @@ function drawVisualization() {
 	</article>
 	
 	<!-- VISUALIZZA TUTTI GLI EVENTI -->
+	<!-- VISUALIZZA TUTTI GLI EVENTI -->
+				<%
+				ArrayList<String> eventi = new ArrayList<String>();
+				eventi = d.getEventi();
+				%>
+
+
 	<article id="Eventi">
 		<div class="container-fluid text-center">
 			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder-open"></span><br>
 			<b>EVENTI</b></font></font></font></p>
 			<table>
 			
-			<tr><td>Evento 1 </td><td> Scuola </td><td> tema</td></tr>
-			<tr><td>Evento 2 </td><td> Scuola </td><td> </td></tr>
-			<tr><td>Evento 3 </td><td> </td><td> </td></tr>
+			<%
+				for(int i=0; i < eventi.size(); i++) {
+				%>
+				<tr><td style="width:100px">
+				<%="Evento " + (i + 1)%>
+				</td>
+				
+				<td>
+				<%=eventi.get(i).toString()%>
+				</td></tr>
+			<% } %>
+
 			</table>
 		</div>
 	</article>
