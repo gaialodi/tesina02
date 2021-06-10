@@ -169,6 +169,20 @@ public class DATI extends HttpServlet{
  }
 
   //queries per prendere i dati dal datastore
+	//Ritorna tutti gli eventi
+	 public ArrayList getEventi(){
+		 DatastoreService dataService = DatastoreServiceFactory.getDatastoreService();
+		 String stringa ="";
+		 Query query = new Query("eventi");
+		 List<Filter> filters = new ArrayList<Filter>();
+		 PreparedQuery preparedQ = dataService.prepare(query);
+		 List<Entity> list = preparedQ.asList(FetchOptions.Builder.withLimit(100));
+		 ArrayList<String> eventi = new ArrayList<String>();
+		 for(Entity e : list) {
+					 eventi.add(e.getProperty("Titolo_Progetto").toString());
+		 }
+		 return eventi;
+	 }
 	//Eventi con parola cercata
  public ArrayList Search(String word){  
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
