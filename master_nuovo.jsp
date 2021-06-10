@@ -477,7 +477,7 @@ function drawVisualization() {
 				<td>
 				<% eventi[i] %>
 				</td></tr>
-				
+			<% } %>
 
 			</table>
 		</div>
