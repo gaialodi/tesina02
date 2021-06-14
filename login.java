@@ -46,12 +46,6 @@ public class login extends HttpServlet{
 				response.sendRedirect("master.jsp");
 		}
 		
-		if(request.getParameter("addFile") != null) {
-			//file
-			
-		}
-		
-		//44.923207414560665, 11.028146113458899
 	}
 	
 	private UserService us;
@@ -74,7 +68,7 @@ public class login extends HttpServlet{
 		e.setProperty("admin", true); //Gaia è admin
 		ds.put(e);
 		
-		String scuola = "I.T. Scaruffi Levi Tricolore"; //metto nome del campo che cerco di intercettare
+		String scuola = "I.T. Scaruffi Levi  Tricolore"; //metto nome del campo che cerco di intercettare
 		double lat = 44.7007475271964;
 		double longi = 10.633781921287271; //metto nome del campo che cerco di intercettare
 		Entity s = new Entity("scuole", 1);
@@ -84,9 +78,6 @@ public class login extends HttpServlet{
 		ds.put(s);
 		
 	}
-	
-	public void Scuole() {
-		
-	}
+
 		
 }
