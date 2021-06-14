@@ -23,7 +23,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.utils.SystemProperty;
 
-@WebServlet(name = "HelloAppEngine", value = {"/helloTesina00"}) // , 
+@WebServlet(name = "HelloAppEngine", value = {"/helloTesina00"}) 
 public class HelloAppEngine extends HttpServlet {
 	
 	String userGiusta="demo"; 
@@ -38,7 +38,7 @@ public class HelloAppEngine extends HttpServlet {
     Properties properties = System.getProperties();
 
     response.setContentType("text/plain");
-    response.getWriter().println("Hello App Engine - Standard using "
+    response.getWriter().println("Hello App Engine - Standard using"
         + SystemProperty.version.get() + " Java " + properties.get("java.specification.version"));
   }
   
@@ -49,24 +49,23 @@ public class HelloAppEngine extends HttpServlet {
 	    o.load();
 	  
 		boolean adminDB = false;
-		String userDB ="gaia";
-		String passDB="pw";
-		//ricevere i parametri: ho fatto una servlet con username e password
-		String usernInserita = request.getParameter("username"); //metto nome del campo che cerco di intercettare
-		String passwInserita = request.getParameter("password"); //metto nome del campo che cerco di intercettare
+		String userDB = null;
+		String passDB = null;
+		
+		//ricevere i parametri: ho fatto una servlet 
+		String usernInserita = request.getParameter("username"); 
+		String passwInserita = request.getParameter("password"); 
 		  
 		login log00 = new login();
 		log00.add();
-		//log00.addUser(usern, passw); //questo utente NON è un admin
 	    
 	  //recupero la sessione corrente
 	    HttpSession oldSession = request.getSession(false);
 	    if(oldSession!=null) {
 	    	oldSession.invalidate(); //invalida la sessione se esiste
 		}
-	    HttpSession currentSession = request.getSession(); //creo nuova sessione ( di defalut fa true
-		
-	  	//CODICE GETADMIN dal database		
+	    HttpSession currentSession = request.getSession(); //creo nuova sessione ( di defalut fa true)
+			
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 		Query q = new Query("utenti"); // voglio la query su utenti
 		Filter f = new FilterPredicate("username",FilterOperator.EQUAL, usernInserita); // voglio l'username
@@ -75,40 +74,19 @@ public class HelloAppEngine extends HttpServlet {
 		PreparedQuery pq = ds.prepare(q);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
 		
-		String prepQuery=pq.toString();//così posso stampare tutta la query direttamente
-		
 		//se nel db ho che l'uente è un admin metto admin DB == true
-		//adminDB
+		
+		//inserisco dentro alle stringhe i dati che ho estratto dal database
 		for (Entity result : pq.asIterable()) {
 			  passDB = (String) result.getProperty("password");
 			  userDB = (String) result.getProperty("username");
 			  adminDB=(boolean) result.getProperty("admin");
 			}
-		
-		currentSession.setAttribute("username", usernInserita);
+
 		currentSession.setAttribute("usDB", userDB);
-		currentSession.setAttribute("pwDB", passDB);
 		currentSession.setAttribute("admDB", adminDB);
 		currentSession.setMaxInactiveInterval(5*60); //max 5 min di inattività
 	    
-		
-		/*//GET utente che ha fatto login nella pagina
-		Filter f1 = new FilterPredicate("username",FilterOperator.EQUAL, userGiusta);
-		Query q1 = new Query("utenti").setFilter(f1); // voglio la query su utenti
-		PreparedQuery pq1 = ds.prepare(q1);
-		
-		//secondo me non serve
-		//List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
-		
-		for (Entity result : pq1.asIterable()) {
-			  String passGiusta = (String) result.getProperty("password");
-			  String userGiusto = (String) result.getProperty("Name");
-			  boolean adminGiusto = (boolean) result.getProperty("admin");
-		}*/
-		
-		 //response.getWriter().println(passGiusta);		
-		// response.getWriter().println(userGiusta);
-	  		  	  
 		  if(userDB.equals(usernInserita) && passDB.equals(passwInserita)) {
 			  // autenticazione è andata a buon fine
 			  response.sendRedirect("master.jsp");
@@ -117,7 +95,6 @@ public class HelloAppEngine extends HttpServlet {
 			  //se l'autenticazione fallisce
 			  response.sendRedirect("loginErrato.jsp");
 		  }
-		  	  
 		 
   }
   
