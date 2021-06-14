@@ -49,7 +49,6 @@ public class DATI extends HttpServlet{
 	      throws IOException {
 	  
 	  //importazione del file dalla form di inserimento
-	  System.out.println("BELLA LIIIII2222");
 	  DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 		 Query q = new Query("eventi");
 		 PreparedQuery pq = ds.prepare(q);
@@ -64,7 +63,7 @@ public class DATI extends HttpServlet{
 		  
 		  Part filePart = request.getPart("picker");
 		    filecontent = filePart.getInputStream();
-		    response.getWriter().print("The file uploaded sucessfully.");
+		    //response.getWriter().print("The file uploaded sucessfully.");
 		    BufferedReader br = new BufferedReader(new InputStreamReader(filecontent, "UTF-8"));
   
 		  String line;
@@ -84,25 +83,28 @@ public class DATI extends HttpServlet{
 			  String numero_studenti_coinvolti=e[10].trim();
 			  String età_partecipanti=e[11]+" a "+e[12].trim();
 			  String Parola_chiave=e[13].trim();
-
-			   Entity x=new Entity("eventi",i);
-			   x.setProperty("AS",AS);
-			   x.setProperty("Scuola",Scuola);
-			   x.setProperty("Comune",Comune);
-			   x.setProperty("Grado",Grado);
-			   x.setProperty("Inidirizzo",Indirizzo);
-			   x.setProperty("Titolo_Progetto",Titolo_Progetto);
-			   x.setProperty("Periodo",Periodo);
-			   x.setProperty("Formatore",Formatore);
-			   x.setProperty("numero_ore",numero_ore);
-			   x.setProperty("numero_studenti_coinvolti",numero_studenti_coinvolti);
-			   x.setProperty("età_partecipanti",età_partecipanti);
-			   x.setProperty("Parola_chiave",Parola_chiave);
-			   x.setProperty("CODE",i);
-			   i++;
-			   ds.put(x);	
-			   System.out.println("BELLA LIIIII "+i);
-
+			  
+			  String scuola1 = request.getParameter("scuola").toString();
+			  System.out.println(scuola1+" "+Scuola);
+			  if(scuola1.equals(Scuola.toString())) {
+				  
+				  Entity x=new Entity("eventi",i);
+				   x.setProperty("AS",AS);
+				   x.setProperty("Scuola",Scuola);
+				   x.setProperty("Comune",Comune);
+				   x.setProperty("Grado",Grado);
+				   x.setProperty("Inidirizzo",Indirizzo);
+				   x.setProperty("Titolo_Progetto",Titolo_Progetto);
+				   x.setProperty("Periodo",Periodo);
+				   x.setProperty("Formatore",Formatore);
+				   x.setProperty("numero_ore",numero_ore);
+				   x.setProperty("numero_studenti_coinvolti",numero_studenti_coinvolti);
+				   x.setProperty("età_partecipanti",età_partecipanti);
+				   x.setProperty("Parola_chiave",Parola_chiave);
+				   x.setProperty("CODE",i);
+				   i++;
+				   ds.put(x);	
+			  }
    }
 
    br.close();
@@ -135,7 +137,7 @@ public class DATI extends HttpServlet{
 			  String Indirizzo=e[3].trim();
 			  String Grado=e[4].trim();
 			  String Titolo_Progetto=e[5].trim();
-			  String Periodo=e[6]+"a"+e[7].trim();
+			  String Periodo=e[6]+" a "+e[7].trim();
 			  String Formatore=e[8].trim();
 			  String numero_ore=e[9].trim();
 			  String numero_studenti_coinvolti=e[10].trim();
@@ -170,11 +172,9 @@ public class DATI extends HttpServlet{
 
   //queries per prendere i dati dal datastore
 	//Ritorna tutti gli eventi
-	 public ArrayList getEventi(){
+	 public ArrayList getEventiTitoli(){
 		 DatastoreService dataService = DatastoreServiceFactory.getDatastoreService();
-		 String stringa ="";
 		 Query query = new Query("eventi");
-		 List<Filter> filters = new ArrayList<Filter>();
 		 PreparedQuery preparedQ = dataService.prepare(query);
 		 List<Entity> list = preparedQ.asList(FetchOptions.Builder.withLimit(100));
 		 ArrayList<String> eventi = new ArrayList<String>();
@@ -183,6 +183,7 @@ public class DATI extends HttpServlet{
 		 }
 		 return eventi;
 	 }
+	 
 	//Eventi con parola cercata
  public ArrayList Search(String word){  
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -353,22 +354,6 @@ public class DATI extends HttpServlet{
 			}
 		return chiave;
 	}
-	 
- 
- //fare lista di filtri
- public Integer getTutto(String CampoDaCercare, String AS){
-	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-	 Query q = new Query("eventi");
-	 List<Filter> filters = new ArrayList<Filter>();
-	 q.setFilter(new FilterPredicate(CampoDaCercare,FilterOperator.EQUAL,AS));
-	 PreparedQuery pq = ds.prepare(q);
-	 List<Entity> list = pq.asList(FetchOptions.Builder.withLimit(100));
-	 Integer eventi_totali = 0;
-	 for(Entity e : list) {
-		 eventi_totali++;
-	 }
-	 return eventi_totali;
- }
  
  //PRENDERE TUTTE LE SCUOLE:
  public ArrayList getScuole(){
@@ -385,8 +370,6 @@ public class DATI extends HttpServlet{
 	 return scuole;
  }
  
- 
- 
  //PRENDERE TUTTE LE LATITUDINI:
  public ArrayList getLat(){
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -402,7 +385,7 @@ public class DATI extends HttpServlet{
 	 return latitudini;
  }
  
- //PRENDERE TUTTE LE SCUOLE:
+ //PRENDERE TUTTE LE LONGITUDINI:
  public ArrayList getLongi(){
 	 DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 	 String s ="";
@@ -430,7 +413,5 @@ public class DATI extends HttpServlet{
 	 }
 	 return sb.toString();
  }
- 
- 
  
  }
