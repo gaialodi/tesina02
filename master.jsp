@@ -10,7 +10,6 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 
-	
 <head>
 <title>Prefettura e adolescenza</title>
 <meta charset="utf-8">
@@ -30,7 +29,7 @@
    crossorigin=""></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <script>google.charts.load('current', {packages: ['corechart']});</script>
-<%DATI d=new DATI(); %>
+<%DATI d=new DATI();%>
 
 <!-- #log modifica la barra di login
 .navbar modifica la barra di navigazione (in alto)
@@ -40,6 +39,11 @@
 
 .navbar-brand {
 	cursor: pointer;
+}
+
+td{
+	margin-top: 10px;
+	padding-top: 5px;
 }
 
 .navbar {
@@ -59,10 +63,10 @@
  	color: white;
   }
 
-.container-fluid, container{
-padding-top: 80px;
-padding-bottom: 50px;
-font-size:16px;
+.container-fluid, container {
+padding-top: 110px;
+padding-bottom: 80px;
+font-size:18px;
 }
 
 body{
@@ -170,47 +174,10 @@ font-size: 20px;
   font-size: 25px;
 }
 
-#num_5_top,
-#variazione_5_top,
-#total_5_top {
-  color: #f38384;
-}
-
-#num_6_top,
-#variazione_6_top,
-#total_6_top {
+#num_6_top{
   color: black;
   font-size: 25px;
-}
-
-#num_7_top,
-#variazione_7_top,
-#total_7_top {
-  color: #f38384;
-}
-
-#num_5_top,
-#num_6_top,
-#num_7_top {
   font-weight: 800;
-}
-
-#num_5,
-#variazione_5,
-#total_5 {
-  color: #ef4e63;
-}
-
-#num_6,
-#variazione_6,
-#total_6 {
-  color: #aa0438;
-}
-
-#num_7,
-#variazione_7,
-#total_7 {
-  color: #f38384;
 }
 
 .timer {
@@ -287,7 +254,7 @@ input[type=number] {
 }
 
 form{
-font-size: 16px;
+font-size: 18px;
 
 }
 
@@ -397,9 +364,7 @@ function drawVisualization() {
 <body>
 
 	<%
-	String user=(String)session.getAttribute("username");
-	String usDB=(String)session.getAttribute("usDB");
-	String pwDB=(String)session.getAttribute("pwDB");
+	String user=(String)session.getAttribute("usDB");
 	boolean adminDB=(boolean)session.getAttribute("admDB");%>
 	
 	<div id="main">
@@ -408,7 +373,7 @@ function drawVisualization() {
 	   	 <div class="navbar-header">
 	   	 </div>
 	   	 <ul class="nav navbar-nav navbar-left text-gray">
-	   	   <li><a href="">Home</a></li>
+	   	   <li><a href=""><span class="glyphicon glyphicon-home"></span></a></li>
 	 	 </ul>
 	    	 <ul class="nav navbar-nav navbar-right text-gray">
 	      		<li><a href="#Dati">DATI</a></li>
@@ -423,22 +388,21 @@ function drawVisualization() {
 	
 	
 	<div class="container-fluid text-center" style="background-color:White;">
-		<p><font size="10"><font face="Arial">Sei nel sito Prefettura e Adolescenza!</font></FONT></p>
+	Ciao <%=user%>!
+		<p><font size="11"><font face="Arial">Sei nel sito Prefettura e Adolescenza!</font></FONT></p>
 		<p><font size="6"><font face="Arial">Su questo sito puoi consultare gli eventi delle scuole della provincia di Reggio Emilia su temi critici quali droghe, alcol e bullismo.</font> </FONT> </p>
-		<img src="stemmareggio.jpeg"   height="300">
+		<img src="stemmareggio.jpeg" height="300">
 		<%if(adminDB==true){ %>
 		<p><FONT size="6">Per aggiungere un utente, una scuola o degli eventi vai in fondo alla pagina</FONT></p>
 		<%}%>
 		<font size="4">Per consultare il sito del comune di Reggio Emilia clicca <a href="https://www.comune.re.it/">qui</a></font><p>
 		<font size="4">Per consultare il sito della prefettura di Reggio Emilia clicca <a href="http://www.prefettura.it/reggioemilia/multidip/index.htm">qui</a></font>
-		
-		<h6>Stringa che esce dalla query: name:<%=usDB%> pw:<%=pwDB%> admin:<%=adminDB%></h6>
 	</div>
 
 	<!-- DATI / CONTATORI -->
 	<article id="Dati">
 		<div class="container-fluid text-center" >
-			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-file"></span><br>
+			<p><font size="8"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-file"></span><br>
 			<b>DATI RACCOLTI</b></font></font></font></p>
 			<!-- CONTATORE -->
 				<div class="counter_wrapper">
@@ -471,8 +435,9 @@ function drawVisualization() {
 	
 	
 	<article id="Grafici">
-		<div class="container-fluid text-center" style="background-color:White;">
-			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-stats"></span><br><b>CHARTS</b></font></font></font></p>
+		<div class="container-fluid text-center" >
+		<p><font size="8"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-stats"></span><br>
+		<b>CHARTS</b></font></font></font></p>
 			<div class="row">
 				<div id="tbn" class="col-sm-4 text-center">	 	
 					<div id="chart1_div" style="width: 100%; height: 60%; "></div>
@@ -488,26 +453,18 @@ function drawVisualization() {
 	</article>
 	
 	<!-- VISUALIZZA TUTTI GLI EVENTI -->
-	<!-- VISUALIZZA TUTTI GLI EVENTI -->
-				<%
-				ArrayList<String> eventi = new ArrayList<String>();
-				eventi = d.getEventi();
-				%>
-
+	<%ArrayList<String> eventi = new ArrayList<String>();
+	eventi = d.getEventiTitoli();%>
 
 	<article id="Eventi">
 		<div class="container-fluid text-center">
-			<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder-open"></span><br>
+			<p><font size="8"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-folder-open"></span><br>
 			<b>EVENTI</b></font></font></font></p>
 			<table>
-			
-			<%
-				for(int i=0; i < eventi.size(); i++) {
-				%>
+			<%for(int i=0; i < eventi.size(); i++) {%>
 				<tr><td style="width:100px">
-				<%="Evento " + (i + 1)%>
+				<%="Evento " + (i + 1) +" "%>
 				</td>
-				
 				<td>
 				<%=eventi.get(i).toString()%>
 				</td></tr>
@@ -520,16 +477,12 @@ function drawVisualization() {
 	<!-- MAPPA  -->
 	<article id="Map">
 		<div class="container-fluid text-center" style="background-color:White;">
-		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-map-marker"></span><br>
+		<p><font size="8"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-map-marker"></span><br>
 		<b>MAPPA</b></font></font></font></p>
 			<div id="mapId" style="position: relative; top: 0; left: 70; right:70; width: 90%; height: 70%;"></div>
 			
 			<script>
-				//MAPPA
-				var lat = 44.7007;
-				var longi= 10.6337;
-				//String s = "Istituto SCaruffiLeviTricolore";
-		
+				//MAPPA		
 				var map = new L.map("mapId").setView([44.7007, 10.6337], 12);
 	
 				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -550,21 +503,16 @@ function drawVisualization() {
 					Double lat = Double.parseDouble(latitudini.get(i));
 					Double longi = Double.parseDouble(longitudini.get(i));
 					%>
-
 					L.marker([<%=lat%>, <%=longi%>]).addTo(map).bindPopup('<b><%=s%></b>');
-
 				<%}%>			
-				
 			</script>
-			
 		</div>
-		
 	</article>
 	
 	<!-- VISUALIZZA TUTTE LE SCUOLE -->
 	<article id="Scuole">
 		<div class="container-fluid text-center">
-		<p><font size="6"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-book"></span><br>
+		<p><font size="8"> <FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-book"></span><br>
 		<b>Scuole</b></font></font></font></p>
 		<table>
 			<tr><td><%=d.getTutteScuole() %></td></tr>
@@ -575,7 +523,8 @@ function drawVisualization() {
 	<!-- CERCA EVENTO -->	
 	<article id="CercaEvento">
 		<div class="container-fluid text-center" style="background-color:#e0ebeb;">
-			<p><FONT COLOR="#000080"><font size="4"><font face="Arial"><span class="glyphicon glyphicon-filter"></span><br><b>Cerca per parole chiave</b></font></font></FONT></p>
+			<p><FONT COLOR="#000080"><font size="6"><font face="Arial"><span class="glyphicon glyphicon-filter"></span><br>
+			<b>Cerca per parole chiave</b></font></font></FONT></p>
 			
 			<form method="post" id="search" action="#CercaEvento">
 						<table>
@@ -600,7 +549,7 @@ function drawVisualization() {
 	<!-- AGGIUNGI SCUOLE -->
 	<article id="Aggiungi scuole">
 		<div class="container-fluid text-center" style="background-color:#e0ebeb;">
-			<p><font size="4"> <FONT COLOR=" #000080"><font face="Arial"><span class="glyphicon glyphicon-plus"></span><br>
+			<p><font size="6"> <FONT COLOR=" #000080"><font face="Arial"><span class="glyphicon glyphicon-plus"></span><br>
 			<b>Aggiungi scuola</b></font></font></font></p>
 			Inserisci la scuola che vuoi aggiunere
 			<!-- lo mando alla servlet login.java -->
@@ -618,7 +567,7 @@ function drawVisualization() {
 						<td><label for="longi" style="width:100px"><b>Longitudine  </b></label></td>
 						<td><input type="number" style="width:250px" id="longi" step="0.0000000000001" min="0" max="100" placeholder="Inserisci la longitudine" name="longi" required><br/></td>
 					</tr>
-					<tr><td></td><td><button type="submit" name="addScuola" value="addScuola">Aggiungi</button></td></tr>
+					<tr><td></td><td><button class="btn btn-primary" type="submit" name="addScuola" value="addScuola">Aggiungi</button></td></tr>
 				</table>
 			</form>
 		</div>
@@ -628,14 +577,14 @@ function drawVisualization() {
 	<!-- AGGIUNGI EVENTI (FILE) -->
 	<article>
 		<div class="container-fluid text-center" style="background-color:#e0ebeb;">
-			<p><font size="4"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-open-file"></span><br>
+			<p><font size="6"><FONT COLOR=" #000080"> <font face="Arial"><span class="glyphicon glyphicon-open-file"></span><br>
 			<b>Aggiungi eventi</b></font></font></font></p>
 			<!-- COLLEGARE MENU DROPDOWN CON SCUOLE  -->
 			Aggiungi un file .csv con degli eventi
 					<form method="post" id="addFile" action="/helloTesina02" enctype="multipart/form-data">
 						<table>
 							<tr><td><label for="scuola" style="width:300px" placeholder="Scuola">Seleziona la scuola:</label></td>
-							<td><input list="scuole" style="width:400px">
+							<td><input list="scuole" id="scuola" name="scuola" style="width:400px">
 								<datalist id="scuole">
 									<!-- qui ci va la lista delle scuole -->
 									<%for(int i = 0; i < d.getScuole().size() ; i++){
@@ -646,12 +595,9 @@ function drawVisualization() {
 								<br>
 							 <tr><td><span><label for="file">Select a file:</label></td>
 							 <td><input id="picker" type="file" style="width:400px" name="picker"></span><td><tr>
-							 <tr><td><button type="submit" class="btn btn-primary" style="position: absolute; left: 25%; margin-top: 5px;">Aggiungi</button></td><td></td></tr>
+							 <tr><td></td><td><button class="btn btn-primary" type="submit" class="btn btn-primary" style="position: absolute; left: 25%; margin-top: 5px;">Aggiungi</button></td><td></td></tr>
 	  					</table>
-	  						 
-							<!-- lasciamo questo script? 
-							<script src="LETTURA_CODICE.js"></script>-->
-						
+							<!-- <script src="LETTURA_CODICE.js"></script>-->
 					</form>										
 									
 		</div>
@@ -660,16 +606,19 @@ function drawVisualization() {
 	<!-- AGGIUNGI UTENTE -->
 	<article id="Aggiungi utente">
 		<div class="container-fluid text-center" style="background-color:#e0ebeb;">
-			<p><font size="4"> <FONT COLOR=" #000080"><font face="Arial"><span class="glyphicon glyphicon-user"></span><br>
+			<p><font size="6"> <FONT COLOR=" #000080"><font face="Arial"><span class="glyphicon glyphicon-user"></span><br>
 			<b>Aggiungi utente</b></font></font></font></p>
 			Inserisci i dati dell'utente che vuoi aggiunere <br>
 			<!-- lo mando alla servlet login.java -->
 			<form method="post" id="newUser" action="/helloTesina01">
-				<label for="username" style="width:80px"><b>Username</b></label>
-				<input type="text" id="User" placeholder="Enter Username" name="username" required><br/>
-				<label for="psw" style="width:80px;"><b> Password </b></label>
-				<input type="password" id="Password" placeholder="Enter Password" name="password" required><br/>
-				<button type="submit" name="addUser" value="addUser">Aggiungi</button>
+			<table>
+				<tr></tr>
+				<td><label for="username" style="width:80px"><b>Username</b></label></td>
+				<td><input type="text" id="User" placeholder="Enter Username" name="username" required><br/></td></tr>
+				<tr><td><label for="psw" style="width:80px;"><b> Password </b></label></td>
+				<td><input type="password" id="Password" placeholder="Enter Password" name="password" required><br/></td></tr>
+				<tr><td></td><td><button class="btn btn-primary" type="submit" name="addUser" value="addUser">Aggiungi</button></td></tr>
+			</table>
 			</form>
 		</div>
 	</article>
